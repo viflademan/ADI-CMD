@@ -1,4 +1,4 @@
-Version 1.1 of Alternative Daz Importer by indusfre
+Version 1.0 of Alternative Daz Importer by raldios
 
 First time Setup
 	Open settings.cfg and change the directories of your DAZ library and where your asset zips are stored. The path to your DAZ library is where it will dump the files directly. (data/, Runtime/, People/, etc) You can change your zips folder after importing them and installing them, but I don't recommend it.
@@ -16,7 +16,7 @@ Metadata
 	ADI will create a Daz script (.dsa) automatically on installation of assets to your library (import.dsa). By default it will automatically run the script after installation, launching Daz3D to import metadata. Change these options in settings.cfg.
 	
 Bugs
-	If you encounter any bugs, use debug.bat instead of ADI.exe to keep the error on screen. Please send indusfre the error as a private message on the discord in #bugs.
+	If you encounter any bugs, use debug.bat instead of ADI.exe to keep the error on screen. Please send the error as a message on the discord in #bugs.
 	
 Discord Support Server
 	https://discord.gg/7VThc5J 
