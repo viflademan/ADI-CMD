@@ -3,7 +3,7 @@ import cfg, manage, lst, p #adi modules
 
 def main(): #main menu
 	os.system('cls')
-	print("\n\t Alternate Daz Importer")
+	print("\n\t Alternative Daz Importer")
 	print("\n\t 1. List Menu")
 	print("\t 2. Import Assets")
 	print("\t 3. Install Assets")
@@ -197,6 +197,8 @@ def page(curPage, maxPage):
 		
 def about():
 	print("\n\t Alternative Daz Importer by indusfre")
+	print("\n\t Version 1.0")
+	input()
 	
 		
 def invalid():
