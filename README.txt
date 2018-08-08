@@ -12,6 +12,9 @@ Importing Assets into ADI
 Installing and Uninstalling Assets
 	Installation and Uninstallation is simple. Enter the appropriate menu, select the assets you would like to install or uninstall, and trigger the process with the appropiate option.
 	
+Metadata
+	ADI will create a Daz script (.dsa) automatically on installation of assets to your library (import.dsa). By default it will automatically run the script after installation, launching Daz3D to import metadata. Change these options in settings.cfg.
+	
 Bugs
 	If you encounter any bugs, use debug.bat instead of ADI.exe to keep the error on screen. Please send indusfre the error as a private message on the discord in #bugs.
 	
