@@ -1,4 +1,4 @@
-Version 1.0 of Alternative Daz Importer by indusfre
+Version 1.1 of Alternative Daz Importer by indusfre
 
 First time Setup
 	Open settings.cfg and change the directories of your DAZ library and where your asset zips are stored. The path to your DAZ library is where it will dump the files directly. (data/, Runtime/, People/, etc) You can change your zips folder after importing them and installing them, but I don't recommend it.
