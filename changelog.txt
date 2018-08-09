@@ -1,0 +1,6 @@
+ADI 1.0.1
+	Implemented pathlib to fix bugs with path creation.
+		No longer needing trailing slashles at the end of paths
+		Does not matter if forward or back slash is used
+ADI 1.0.0
+	Initial release.
