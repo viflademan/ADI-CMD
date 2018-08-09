@@ -25,6 +25,10 @@ def main(): #main menu
 	elif choice == "4":
 		uninstall(0)
 		main()
+	elif choice == "5":
+		print(cfg.zipsDir)
+		input()
+		main()
 	elif choice.lower() == "a":
 		about()
 		main()

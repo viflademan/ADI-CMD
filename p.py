@@ -1,10 +1,11 @@
 import os, sys, pickle #python modules
 import cfg #adi modules
+from pathlib import Path
 
 error = False
 
 def gAssets():
-	with open(cfg.txtsDir + "assets" + ".p", 'rb') as f:
+	with open(cfg.txtsDir / "assets.p", 'rb') as f:
 		try:
 			return pickle.load(f)
 		except:
@@ -13,7 +14,7 @@ def gAssets():
 			sys.exit()
 		
 def sAssets(assets):
-	with open(cfg.txtsDir + "assets" + ".p", 'wb') as f:
+	with open(cfg.txtsDir / "assets.p", 'wb') as f:
 		try:
 			pickle.dump(assets, f)
 		except:
@@ -22,7 +23,7 @@ def sAssets(assets):
 			sys.exit()
 		
 def gInstalled():
-	with open(cfg.txtsDir + "installed" + ".p", 'rb') as f:
+	with open(cfg.txtsDir / "installed.p", 'rb') as f:
 		try:
 			return pickle.load(f)
 		except:
@@ -31,7 +32,7 @@ def gInstalled():
 			sys.exit()
 		
 def sInstalled(installed):
-	with open(cfg.txtsDir + "installed" + ".p", 'wb') as f:
+	with open(cfg.txtsDir / "installed.p", 'wb') as f:
 		try:
 			pickle.dump(installed, f)
 		except:
@@ -40,7 +41,7 @@ def sInstalled(installed):
 			sys.exit()
 		
 def gToInstall():
-	with open(cfg.txtsDir + "toInstall" + ".p", 'rb') as f:
+	with open(cfg.txtsDir / "toInstall.p", 'rb') as f:
 		try:
 			return pickle.load(f)
 		except:
@@ -49,7 +50,7 @@ def gToInstall():
 			sys.exit()
 		
 def sToInstall(toInstall):
-	with open(cfg.txtsDir + "toInstall" + ".p", 'wb') as f:
+	with open(cfg.txtsDir / "toInstall.p", 'wb') as f:
 		try:
 			pickle.dump(toInstall, f)
 		except:
@@ -58,7 +59,7 @@ def sToInstall(toInstall):
 			sys.exit()
 		
 def gToUninstall():
-	with open(cfg.txtsDir + "toUninstall" + ".p", 'rb') as f:
+	with open(cfg.txtsDir / "toUninstall.p", 'rb') as f:
 		try:
 			return pickle.load(f)
 		except:
@@ -67,7 +68,7 @@ def gToUninstall():
 			sys.exit()
 		
 def sToUninstall(toUninstall):
-	with open(cfg.txtsDir + "toUninstall" + ".p", 'wb') as f:
+	with open(cfg.txtsDir / "toUninstall.p", 'wb') as f:
 		try:
 			pickle.dump(toUninstall, f)
 		except:
@@ -76,7 +77,7 @@ def sToUninstall(toUninstall):
 			sys.exit()
 		
 def sFile(obj, loc):
-	with open(loc + ".p", 'wb') as f:
+	with open(Path(str(loc) + ".p"), 'wb') as f:
 			try:
 				pickle.dump(obj, f)
 			except:
@@ -126,9 +127,11 @@ def makeDirs():
 		input("Check settings.cfg and relaunch ADI. Do you have permissions there?")
 		sys.exit()
 		
-	if not os.path.exists(cfg.txtsDir + "assets" + ".p"): #create assets.p if it does not exist
+	path = Path(cfg.txtsDir)
+	path = path / "assets.p"
+	if not os.path.exists(path): #create assets.p if it does not exist
 		assetList = list()
-		with open(cfg.txtsDir + "assets" + ".p", 'wb') as f:
+		with open(path, 'wb') as f:
 			try:
 				pickle.dump(assetList, f)
 			except:
@@ -137,7 +140,9 @@ def makeDirs():
 				sys.exit()
 		
 	toInstall = list()
-	with open(cfg.txtsDir + "toInstall" + ".p", 'wb') as f: #overwite toInstall list with blank one
+	path = Path(cfg.txtsDir)
+	path = path / "toInstall.p"
+	with open(path, 'wb') as f: #overwite toInstall list with blank one
 			try:
 				pickle.dump(toInstall, f)
 			except:
@@ -145,9 +150,11 @@ def makeDirs():
 				input("Check settings.cfg and relaunch ADI.")
 				sys.exit()
 
-	if not os.path.exists(cfg.txtsDir + "installed.p"): #create installed.p if it does not exist
+	path = Path(cfg.txtsDir)
+	path = path / "installed.p"
+	if not os.path.exists(path): #create installed.p if it does not exist
 		installed = list()
-		with open(cfg.txtsDir + "installed" + ".p", 'wb') as f: 
+		with open(path, 'wb') as f: 
 				try:
 					pickle.dump(installed, f)
 				except:
@@ -156,7 +163,9 @@ def makeDirs():
 					sys.exit()
 			
 	toUninstall = list()
-	with open(cfg.txtsDir + "toUninstall" + ".p", 'wb') as f: #overwite toUninstall list with blank one
+	path = Path(cfg.txtsDir)
+	path = path / "toUninstall.p"
+	with open(path, 'wb') as f: #overwite toUninstall list with blank one
 			try:
 				pickle.dump(toUninstall, f)
 			except:

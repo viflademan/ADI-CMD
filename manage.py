@@ -1,5 +1,6 @@
 import os, sys, zipfile, pickle, shutil, subprocess #python modules
 import cfg, p, dsa #adi modules
+from pathlib import Path
 
 def makePs(show): #make reference files
 	zips = p.gZips()
@@ -7,7 +8,7 @@ def makePs(show): #make reference files
 	if show == True:
 		print("\n	Assets Imported")
 	for file in zips:
-		path = cfg.zipsDir + file
+		path = Path(cfg.zipsDir) / file
 		try:
 			zFile = zipfile.ZipFile(path)
 		except:
@@ -29,7 +30,7 @@ def makePs(show): #make reference files
 			print("\t    " + file[:-4])
 		del asset[0]
 		
-		p.sFile(asset, cfg.txtsDir + file[:-4])
+		p.sFile(asset, Path(cfg.txtsDir, file[:-4]))
 		zFile.close()
 	assets = list(set(assets)) #remove duplicates
 	assets = sorted(assets, key=str.lower) #sort alphabetically
@@ -42,7 +43,7 @@ def install(): #install zips
 	print() #skip a line
 	for file in toInstall: #loop for every asset in toInstall
 		print("\t   Installing " + str(file) + "...", end=' ', flush=True)
-		path = cfg.zipsDir + file + ".zip" #make zip path
+		path = cfg.zipsDir / str(file + ".zip") #make zip path
 		zFile = zipfile.ZipFile(path) #open the asset's zip file
 		zList = zFile.infolist() #list of files in zip file
 		importList = [] #make an empty array 
@@ -105,24 +106,22 @@ def uninstall(): #uninstall zips
 		installed.remove(file)
 		installed = list(set(installed))
 		installed = sorted(installed, key=str.lower)
-		txtPath = cfg.txtsDir + file
 		
-		with open(cfg.txtsDir + file + ".p", 'rb') as f:
+		with open(cfg.txtsDir / str(file + ".p"), 'rb') as f:
 			currentAsset = pickle.load(f)
 		for line in currentAsset:
-			filePath = cfg.dazDir + line
+			path = cfg.dazDir / line
 			if "." in line:
 				try:
-					os.remove(filePath)
+					os.remove(path)
 				except:
 					if ".dsx" in line:
 						pass
 					else:
-						print("\n\t   " + filePath + " could not be deleted.")
+						print("\n\t   " + str(path) + " could not be deleted.")
 		print("Uninstalled")
-		
-	path = cfg.dazDir
-	remove_empty_dirs(path)
+
+	remove_empty_dirs(cfg.dazDir)
 	
 	toUninstall = list()
 	p.sInstalled(installed)
