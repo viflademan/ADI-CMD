@@ -1,4 +1,4 @@
-import os, sys, zipfile, pickle, shutil, subprocess #python modules
+import os, sys, zipfile, pickle, shutil, win32api, win32con #python modules
 import cfg, p, dsa #adi modules
 from pathlib import Path
 
@@ -42,7 +42,7 @@ def install(): #install zips
 	
 	print() #skip a line
 	for file in toInstall: #loop for every asset in toInstall
-		print("\t   Installing " + str(file) + "...", end=' ', flush=True)
+		print("\t   Installing " + str(file) + "...", flush=True)
 		path = cfg.zipsDir / str(file + ".zip") #make zip path
 		zFile = zipfile.ZipFile(path) #open the asset's zip file
 		zList = zFile.infolist() #list of files in zip file
@@ -72,20 +72,40 @@ def install(): #install zips
 			pathFolder = path.replace(filename, "")
 			if not os.path.exists(pathFolder): #if folder does not exist
 				os.makedirs(pathFolder) #create folder
-			with zFile.open(member) as source, open(dest, 'wb') as out:
-				shutil.copyfileobj(source, out)
+			with zFile.open(member) as source, open(dest, 'wb') as dest:
+				shutil.copyfileobj(source, dest)
 			
 			# add dsx metadata file to list of assets to be imported in daz
 			if cfg.dsaImport and member.endswith('.dsx'):
 				importList.append(filename)
-					
+		
 		zFile.close() #close zip file
+			
+		if cfg.archive: #make asset zip
+			source = cfg.zipsDir / str(file + ".zip")
+			dest = cfg.arcDir
+			if not os.path.exists(dest): #if folder does not exist
+				os.makedirs(dest) #create folder
+			try:
+				shutil.copy(source, dest)
+			except Exception as e:
+				print(e)
+				#print("\t   Could not copy " + file + ".zip Check permissions in destination folder.")
+			try:
+				win32api.SetFileAttributes(str(source), win32con.FILE_ATTRIBUTE_NORMAL)
+				os.remove(source)
+			except Exception as e:
+				print(e)
+				#print("\t   Could not remove source " + file + ".zip")
+				
 		dsa.writeImport(importList) #write import.dsa
+		
+		
 		
 		installed.append(file) #add asset to list of installed assets
 		installed = list(set(installed)) #remove duplicate assets
 		installed = sorted(installed, key=str.lower) #sort assets alphabetically
-		print("Installed")
+		print("\t   Installed")
 
 	p.sInstalled(installed) #update installed assets
 	p.sToInstall(list()) #reset toInstall list

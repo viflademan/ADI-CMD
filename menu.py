@@ -8,6 +8,8 @@ def main(): #main menu
 	print("\t 2. Import Assets")
 	print("\t 3. Install Assets")
 	print("\t 4. Uninstall Assets")
+	if cfg.debug:
+		print("\t 5. Test Menu")
 	print("\n\t a. About")
 	print("\t q. Quit")
 	choice = input("\n	>>  ")
@@ -20,12 +22,12 @@ def main(): #main menu
 		input("")
 		main()
 	elif choice == "3":
-		install(0)
+		install()
 		main()
 	elif choice == "4":
-		uninstall(0)
+		uninstall()
 		main()
-	elif choice == "5":
+	elif choice == "5" and os.path.exists('debug.cfg'):
 		print(cfg.zipsDir)
 		input()
 		main()
@@ -67,7 +69,7 @@ def listMenu(): #list Menu
 		invalid()
 		listMenu()
 		
-def install(curPage):
+def install(curPage=0):
 	os.system('cls')
 	zips = p.gZips()
 	toInstall = p.gToInstall()
@@ -90,8 +92,9 @@ def install(curPage):
 			i += 1
 		print("\t     " + str(i) + ". " + str(name))
 	print("\n\ta. Mark All Assets")
-	print("\ti. Install Assets")
 	print("\tc. Clear List")
+	print("\ti. Install Assets")
+	#print("\ts. Search") #unfinished feature
 	curPage, choice = page(curPage, maxPage)
 	
 	if choice.isdigit():
@@ -105,6 +108,9 @@ def install(curPage):
 	elif choice.lower() == "i":
 		manage.install()
 		install(curPage)
+	#elif choice.lower() == "s":
+	#	search(zips, "install")
+	#	install(curPage)
 	elif choice.lower() == "a":
 		for file in zips:
 			toInstall.append(file[:-4])
@@ -120,7 +126,7 @@ def install(curPage):
 	p.sToInstall(toInstall)
 	install(curPage)
 	
-def uninstall(curPage):
+def uninstall(curPage=0):
 	os.system('cls')
 	installed = p.gInstalled()
 	toUninstall = p.gToUninstall()
@@ -165,6 +171,65 @@ def uninstall(curPage):
 	p.sToUninstall(toUninstall)
 	uninstall(curPage)
 	
+def search(assets, dest):
+	os.system('cls')
+	results = list()
+	term = input("\n	Search: ")
+	for asset in assets:
+		if term in asset:
+			results.append(asset)
+	searchResults(assets, results, dest, curPage=0)
+	
+def searchResults(assets, results, dest, curPage=0):
+	os.system('cls')
+	choiceList = list()
+	choiceInt = -1
+	
+	pageLength = int(cfg.pageLen)
+	min = 0 + pageLength*curPage
+	max = pageLength - 1 + pageLength*curPage
+	maxPage = len(results) // pageLength
+	
+	print("\n\tResults")
+	for name in assets:
+		i = 1
+		for asset in results:
+			if asset == name:
+				break
+			i += 1
+		print("\t     " + str(i) + ". " + str(name))
+	
+	curPage, choice = page(curPage, maxPage)
+	
+	if choice.isdigit():
+		choiceInt = int(choice)
+	elif choice.lower() == "c":
+		choiceList = assets()
+		if dest == "install":
+			p.sToInstall(choiceList)
+		else:
+			p.sToUninstall(choiceList)
+		uninstall(curPage)
+	elif choice.lower() == "b":
+		if dest == "uninstall":
+			uninstall()
+		else:
+			install()
+	elif choice.lower() == "u" and dest == "uninstall":
+		manage.uninstall()
+		uninstall()
+	elif choice.lower() == "i" and dest == "install":
+		manage.install()
+		install()
+	
+	if choiceInt >= 1 and choiceInt <= len(assets):
+		choiceList.append(results[choiceInt-1])
+		choiceList = set(choiceList)
+		choiceList = list(choiceList)
+		choiceList = sorted(choiceList, key=str.lower)
+
+	searchResults(assets, results, dest, curPage)
+	
 def page(curPage, maxPage):
 	print()
 	if curPage > 0:
@@ -190,10 +255,8 @@ def page(curPage, maxPage):
 			input("\t")
 		return curPage, choice
 	
-	elif choice.lower() == "b":
-		curPage = "back"
-		return curPage, choice
-	elif choice.isdigit() or choice.lower() == "i" or choice.lower() == "c" or choice.lower() == "u" or choice.lower() == "a":
+	validChoices = ["b", "i", "u", "c", "a", "s", ]
+	if choice.isdigit() or choice.lower() in validChoices:
 		return curPage, choice
 	else:
 		invalid()
@@ -201,7 +264,7 @@ def page(curPage, maxPage):
 		
 def about():
 	print("\n\t Alternative Daz Importer by indusfre")
-	print("\n\t Version 1.0")
+	print("\n\t Version 1.1.0")
 	input()
 	
 		

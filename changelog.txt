@@ -1,3 +1,12 @@
+ADI 1.1.0
+	Added a new automatic archival system
+		Automatically moves zips out of zip folder after installation
+		New settings.cfg options
+			[DIRS] - archive
+				directory zips are moved to after installation
+			[OPTIONS] - archive
+				Change to enable archive feature
+		Uses pywin32 module
 ADI 1.0.1
 	Implemented pathlib to fix bugs with path creation.
 		No longer needing trailing slashles at the end of paths

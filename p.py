@@ -2,8 +2,6 @@ import os, sys, pickle #python modules
 import cfg #adi modules
 from pathlib import Path
 
-error = False
-
 def gAssets():
 	with open(cfg.txtsDir / "assets.p", 'rb') as f:
 		try:
@@ -50,7 +48,8 @@ def gToInstall():
 			sys.exit()
 		
 def sToInstall(toInstall):
-	with open(cfg.txtsDir / "toInstall.p", 'wb') as f:
+	path = cfg.txtsDir / "toInstall.p"
+	with open(path, 'wb') as f:
 		try:
 			pickle.dump(toInstall, f)
 		except:
@@ -104,6 +103,17 @@ def makeDirs():
 				sys.exit()
 			print("Cannot create zips folder at " + cfg.zipsDir)
 			error = True
+			
+	if cfg.archive:
+		if not os.path.exists(cfg.zipsDir):
+			try:
+				os.makedirs(cfg.zipsDir)
+			except:
+				if cfg.zipsDir == "":
+					input("Add your archive directory to settings.cfg and restart ADI.")
+					sys.exit()
+				print("Cannot create archive folder at " + cfg.arcDir)
+				error = True
 
 	if not os.path.exists(cfg.txtsDir):
 		try:
@@ -127,11 +137,9 @@ def makeDirs():
 		input("Check settings.cfg and relaunch ADI. Do you have permissions there?")
 		sys.exit()
 		
-	path = Path(cfg.txtsDir)
-	path = path / "assets.p"
-	if not os.path.exists(path): #create assets.p if it does not exist
+	if not os.path.exists(cfg.txtsDir / "assets.p"): #create assets.p if it does not exist
 		assetList = list()
-		with open(path, 'wb') as f:
+		with open(cfg.txtsDir / "assets.p", 'wb') as f:
 			try:
 				pickle.dump(assetList, f)
 			except:
@@ -139,22 +147,18 @@ def makeDirs():
 				input("Check settings.cfg and relaunch ADI.")
 				sys.exit()
 		
-	toInstall = list()
-	path = Path(cfg.txtsDir)
-	path = path / "toInstall.p"
-	with open(path, 'wb') as f: #overwite toInstall list with blank one
-			try:
-				pickle.dump(toInstall, f)
-			except:
-				print("Error saving toInstall file to pickle directory. Do you have permissions there?")
-				input("Check settings.cfg and relaunch ADI.")
-				sys.exit()
+	with open(cfg.txtsDir / "toInstall.p", 'wb') as f: #overwite toInstall list with blank one
+		toInstall = list()
+		try:
+			pickle.dump(toInstall, f)
+		except:
+			print("Error saving toInstall file to pickle directory. Do you have permissions there?")
+			input("Check settings.cfg and relaunch ADI.")
+			sys.exit()
 
-	path = Path(cfg.txtsDir)
-	path = path / "installed.p"
-	if not os.path.exists(path): #create installed.p if it does not exist
+	if not os.path.exists(cfg.txtsDir / "installed.p"): #create installed.p if it does not exist
 		installed = list()
-		with open(path, 'wb') as f: 
+		with open(cfg.txtsDir / "installed.p", 'wb') as f: 
 				try:
 					pickle.dump(installed, f)
 				except:
@@ -163,9 +167,7 @@ def makeDirs():
 					sys.exit()
 			
 	toUninstall = list()
-	path = Path(cfg.txtsDir)
-	path = path / "toUninstall.p"
-	with open(path, 'wb') as f: #overwite toUninstall list with blank one
+	with open(cfg.txtsDir / "toUninstall.p", 'wb') as f: #overwite toUninstall list with blank one
 			try:
 				pickle.dump(toUninstall, f)
 			except:

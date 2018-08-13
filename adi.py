@@ -1,4 +1,3 @@
-#python modules
 import menu, manage, p, cfg #adi modules
 
 p.makeDirs() #make directories on startup
