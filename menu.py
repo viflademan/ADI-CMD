@@ -94,7 +94,7 @@ def install(curPage=0):
 	print("\n\ta. Mark All Assets")
 	print("\tc. Clear List")
 	print("\ti. Install Assets")
-	print("\ts. Search") #unfinished feature
+	#print("\ts. Search") #unfinished feature
 	curPage, choice = page(curPage, maxPage)
 	
 	if choice.isdigit():
@@ -108,9 +108,9 @@ def install(curPage=0):
 	elif choice.lower() == "i":
 		manage.install()
 		install(curPage)
-	elif choice.lower() == "s":
-		search(zips, "install")
-		install(curPage)
+	#elif choice.lower() == "s":
+	#	search(zips, "install")
+	#	install(curPage)
 	elif choice.lower() == "a":
 		for file in zips:
 			toInstall.append(file[:-4])
