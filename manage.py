@@ -42,36 +42,37 @@ def install(): #install zips
 	
 	print() #skip a line
 	for file in toInstall: #loop for every asset in toInstall
-		print("\t   Installing " + str(file) + "...", flush=True)
+		overwrite = 0
+		print("\t   Installing " + str(file) + "...", end=" ", flush=True)
 		path = cfg.zipsDir / str(file + ".zip") #make zip path
 		zFile = zipfile.ZipFile(path) #open the asset's zip file
 		zList = zFile.infolist() #list of files in zip file
 		importList = [] #make an empty array 
 		i = 0
-		for member in zFile.namelist(): #for every file in zipfile
+		for member in zFile.namelist(): #for every member in zipfile
 			if "Manifest" in member or "Supplement" in member: #skip manifest and supplement
 				continue
 				
 			filename = os.path.basename(member)
-			if zList[i].filename[:8] == "Content/": #chop off Content/ from zipfile location
+			if zList[i].filename[:8] == "Content/": #chop off Content/ from member location
 				localDir = zList[i].filename[8:]
-			elif zList[i].filename[:11] == "My Library/": #chop off My Library/ from zipfile location
+			elif zList[i].filename[:11] == "My Library/": #chop off My Library/ from member location
 				localDir = zList[i].filename[11:]
 			else:
 				localDir = zList[i].filename
-			path = os.path.join(cfg.dazDir, localDir)
 			i += 1
 			if not filename:
 				if not os.path.exists(path):
 					os.makedirs(path)
 				continue
+			if os.path.exists(path):
+				overwrite += 1
 	
 			# copy file (taken from zipfile's extract)
 			source = zFile.open(member)
-			dest = os.path.join(cfg.dazDir, localDir)
-			pathFolder = path.replace(filename, "")
-			if not os.path.exists(pathFolder): #if folder does not exist
-				os.makedirs(pathFolder) #create folder
+			dest = cfg.dazDir / localDir
+			if not os.path.exists(dest.parent): #if folder does not exist
+				os.makedirs(dest.parent) #create folder
 			with zFile.open(member) as source, open(dest, 'wb') as dest:
 				shutil.copyfileobj(source, dest)
 			
@@ -81,7 +82,7 @@ def install(): #install zips
 		
 		zFile.close() #close zip file
 			
-		if cfg.archive: #make asset zip
+		if cfg.archive: #move asset zip
 			source = cfg.zipsDir / str(file + ".zip")
 			dest = cfg.arcDir
 			if not os.path.exists(dest): #if folder does not exist
@@ -105,7 +106,9 @@ def install(): #install zips
 		installed.append(file) #add asset to list of installed assets
 		installed = list(set(installed)) #remove duplicate assets
 		installed = sorted(installed, key=str.lower) #sort assets alphabetically
-		print("\t   Installed")
+		print("Installed")
+		if overwrite > 0:
+			print("\t     " + str(overwrite) + " files replaced. Asset possibly already installed.")
 
 	p.sInstalled(installed) #update installed assets
 	p.sToInstall(list()) #reset toInstall list

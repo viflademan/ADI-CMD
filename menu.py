@@ -94,7 +94,7 @@ def install(curPage=0):
 	print("\n\ta. Mark All Assets")
 	print("\tc. Clear List")
 	print("\ti. Install Assets")
-	#print("\ts. Search") #unfinished feature
+	print("\ts. Search") #unfinished feature
 	curPage, choice = page(curPage, maxPage)
 	
 	if choice.isdigit():
@@ -108,9 +108,9 @@ def install(curPage=0):
 	elif choice.lower() == "i":
 		manage.install()
 		install(curPage)
-	#elif choice.lower() == "s":
-	#	search(zips, "install")
-	#	install(curPage)
+	elif choice.lower() == "s":
+		search(zips, "install")
+		install(curPage)
 	elif choice.lower() == "a":
 		for file in zips:
 			toInstall.append(file[:-4])
@@ -178,11 +178,10 @@ def search(assets, dest):
 	for asset in assets:
 		if term in asset:
 			results.append(asset)
-	searchResults(assets, results, dest, curPage=0)
+	searchResults(assets, results, dest)
 	
 def searchResults(assets, results, dest, curPage=0):
 	os.system('cls')
-	choiceList = list()
 	choiceInt = -1
 	
 	pageLength = int(cfg.pageLen)
@@ -191,30 +190,49 @@ def searchResults(assets, results, dest, curPage=0):
 	maxPage = len(results) // pageLength
 	
 	print("\n\tResults")
-	for name in assets:
+	for name in results:
 		i = 1
-		for asset in results:
+		for asset in assets:
 			if asset == name:
 				break
 			i += 1
 		print("\t     " + str(i) + ". " + str(name))
-	
+			
+			
+	if dest == "install":
+		print("\n\tAssets to be installed")
+		processList = p.gToInstall()
+	else:
+		print("\n\tAssets to be uninstalled")
+		processList = p.gToUninstall()
+	for name in processList:
+		i = 1
+		for asset in results:
+			if asset[:-4] == name:
+				break
+			i += 1
+		print("\t     " + str(i) + ". " + str(name))
+	if dest == "install":
+		print("\n\ti. Install Assets")
+	else:
+		print("\n\tu. Uninstall Assets")
+	print("\tc. Clear List")
 	curPage, choice = page(curPage, maxPage)
 	
 	if choice.isdigit():
 		choiceInt = int(choice)
 	elif choice.lower() == "c":
-		choiceList = assets()
+		processList = list()
 		if dest == "install":
-			p.sToInstall(choiceList)
+			p.sToInstall(processList)
 		else:
-			p.sToUninstall(choiceList)
-		uninstall(curPage)
+			p.sToUninstall(processList)
+		searchResults(assets, results, dest, curPage)
 	elif choice.lower() == "b":
-		if dest == "uninstall":
-			uninstall()
-		else:
+		if dest == "install":
 			install()
+		else:
+			uninstall()
 	elif choice.lower() == "u" and dest == "uninstall":
 		manage.uninstall()
 		uninstall()
@@ -222,11 +240,19 @@ def searchResults(assets, results, dest, curPage=0):
 		manage.install()
 		install()
 	
-	if choiceInt >= 1 and choiceInt <= len(assets):
-		choiceList.append(results[choiceInt-1])
-		choiceList = set(choiceList)
-		choiceList = list(choiceList)
-		choiceList = sorted(choiceList, key=str.lower)
+	if choiceInt >= 1 and choiceInt <= len(results):
+		if dest == "install":
+			processList.append(results[choiceInt-1][:-4])
+		else:
+			processList.append(results[choiceInt-1])
+		processList = set(processList)
+		processList = list(processList)
+		processList = sorted(processList, key=str.lower)
+		
+	if dest == "install":
+		p.sToInstall(processList)
+	else:
+		p.sToUninstall(processList)
 
 	searchResults(assets, results, dest, curPage)
 	
@@ -264,7 +290,7 @@ def page(curPage, maxPage):
 		
 def about():
 	print("\n\t Alternative Daz Importer by indusfre")
-	print("\n\t Version 1.1.0")
+	print("\n\t Version 1.2.0")
 	input()
 	
 		

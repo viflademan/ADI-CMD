@@ -1,3 +1,7 @@
+ADI 1.2.0
+	Added a message when files are replaced
+		Logs the number of times a file was replaced for an asset
+		Displays at the end of installation
 ADI 1.1.0
 	Added a new automatic archival system
 		Automatically moves zips out of zip folder after installation
