@@ -1,3 +1,10 @@
+ADI 1.3.0
+	Fixed a bug that prevented specific cases from extracting correctly
+	Added a commandline argument to install all files in asset directory
+		argument is -ia
+	Disabled the ability to see if files were replaced during installation
+		It wasn't working correctly and I wanted to push this update to fix a more critical error
+
 ADI 1.2.0
 	Added a message when files are replaced
 		Logs the number of times a file was replaced for an asset
